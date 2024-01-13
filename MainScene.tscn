@@ -1,0 +1,8 @@
+[gd_scene load_steps=2 format=3 uid="uid://mfoh2j0l10l1"]
+
+[ext_resource type="Script" path="res://Scripts/ElectricDemo.cs" id="1_bse4a"]
+
+[node name="Node3D" type="Node3D"]
+
+[node name="Node" type="Node" parent="."]
+script = ExtResource("1_bse4a")

@@ -1,0 +1,25 @@
+[gd_scene load_steps=2 format=3 uid="uid://xrcmyy5xj537"]
+
+[sub_resource type="CSharpScript" id="CSharpScript_8r3x2"]
+script/source = "using Godot;
+using System;
+using System.Runtime.CompilerServices;
+
+public partial class ElectroResistor : ElectroComponent
+{
+    // Represents the two ends of a regular resistor
+    public ElectroTerminal A;
+    public ElectroTerminal B;
+
+    public int Resistance = 100; // TODO
+
+    // I = V/R
+}
+"
+
+[node name="Resistor" type="Node3D"]
+script = SubResource("CSharpScript_8r3x2")
+
+[node name="Terminal A" type="Node" parent="."]
+
+[node name="Terminal B" type="Node" parent="."]
