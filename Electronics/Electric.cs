@@ -112,14 +112,21 @@ namespace Electric
 
         public void Feed(Power p)
         {
+            // Console.WriteLine($"Feeding {p}");
             // If the new Power is either newer or of lower resistance, replace it!
             if (p.LatestTimestamp > Power.LatestTimestamp || p.Resistance < Power.Resistance) {
-                foreach (Terminal t in Terminals) {
-                    if (t.OnPower != null)
-                        t.OnPower(p);
-                }
 
-                Power = p;
+                // TODO: Check for faults, etc!
+
+                Power = new Power(p);
+
+                // Console.WriteLine(
+                    // $"Passed:  {(p.LatestTimestamp > Power.LatestTimestamp ? $"Timestamp newer. ({p.LatestTimestamp} over {Power.LatestTimestamp})" : "Resistance lower.")}");
+                foreach (Terminal t in Terminals) {
+                    if (t.OnPower != null) {
+                        t.OnPower(p);
+                    }
+                }
             }
 
         }

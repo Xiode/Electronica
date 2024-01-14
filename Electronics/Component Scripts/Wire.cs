@@ -23,9 +23,10 @@ namespace Electric
 
         void Transmit(Power power, Terminal from, Terminal to)
         {
-            power.Resistance++;
-            power.Volts--;
-            to.Connection.Feed(power);
+            Power p = new Power(power);
+            p.Resistance++;
+            p.Volts--;
+            to.Connection.Feed(p);
         }
 
     }
