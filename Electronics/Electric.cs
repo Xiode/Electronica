@@ -1,15 +1,29 @@
+/*
+
+Thom's Electrical Circuit Simulator
+
+*/
+
 using Godot;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Reflection.Metadata.Ecma335;
 
 namespace Electric
 {
     public abstract partial class Component : Node
     {
+        // Not sure if this will be useful, but might be in the future! 
+        // All Electrical Component scripts should inherit from this
     }
 
+
+    /// <summary>
+    /// Each Connection holds one of these. It represents the
+    /// state of the circuit at the point of that Connection.
+    /// When a Component causes a state change, a new one of
+    /// these is generated, and it is passed along to each
+    /// connected Terminal.
+    /// </summary>
     public struct Power
     {
         static int LatestGeneratedID=0;
@@ -41,6 +55,11 @@ namespace Electric
         public int PhaseOffset = 0;
     }
 
+    /// <summary>
+    /// Represents a physical point of connection on a Component.
+    /// Has trigger Actions for when something is connected or
+    /// disconnected, as well as when there is a change of Power.
+    /// </summary>
     public class Terminal
     {
         public Connection Connection = new Connection();
@@ -51,15 +70,18 @@ namespace Electric
             Connection.Terminals.Add(this);
         }
 
+        // Todo: Check for faults, etc etc
         public void Connect(Terminal t)
         {
+            Power oldPower = t.Power;
+
             Connection.Terminals.UnionWith(t.Connection.Terminals);
             t.Connection = Connection;
-            // Connection = t.Connection; // Let's see if this propagates correctly?
+
+            Connection.Feed(oldPower);
+
             if (OnConnect != null) 
                 OnConnect(Power.GenerateNewID());
-            if (OnPower != null)
-                OnPower(Power.GenerateNewID());
         }
         
         public void Disconnect(Terminal t)
@@ -77,10 +99,9 @@ namespace Electric
             Disconnect(this);
         }
 
-
         public Action<int> OnConnect;
         public Action<int> OnDisconnect;
-        public Action<int> OnPower;
+        public Action<Power> OnPower;
         
     }
 
@@ -89,19 +110,16 @@ namespace Electric
         public HashSet<Terminal> Terminals = new HashSet<Terminal>();
         public Power Power;
 
-        public void RecievePower(Power p)
+        public void Feed(Power p)
         {
-            // Console.WriteLine("Recieving power...");
-            if (p.LatestTimestamp > Power.LatestTimestamp || p.Resistance < Power.Resistance ) {
-                // Console.WriteLine($"Passed the test: {p.LatestTimestamp} - {Power.LatestTimestamp} = {p.LatestTimestamp - Power.LatestTimestamp}, {p.Resistance - Power.Resistance} Sending power to {Terminals.Count} Terminals.");
-                Power = p;
-
-                // Console.WriteLine($"Power = p, so timestamp diff is now {p.LatestTimestamp - Power.LatestTimestamp}");
-
+            // If the new Power is either newer or of lower resistance, replace it!
+            if (p.LatestTimestamp > Power.LatestTimestamp || p.Resistance < Power.Resistance) {
                 foreach (Terminal t in Terminals) {
                     if (t.OnPower != null)
-                        t.OnPower(p.LatestTimestamp);
+                        t.OnPower(p);
                 }
+
+                Power = p;
             }
 
         }

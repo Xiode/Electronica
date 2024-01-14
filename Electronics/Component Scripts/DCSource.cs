@@ -18,8 +18,8 @@ namespace Electric
             Power power_positive = new Power(timestamp, 100, sourceName, 1, 0, 0);
             Power power_negative = new Power(timestamp, 0,   sourceName, 1, 0, 0);
 
-            Positive.Connection.RecievePower(power_positive);
-            Negative.Connection.RecievePower(power_negative);
+            Positive.Connection.Feed(power_positive);
+            Negative.Connection.Feed(power_negative);
         }
     }
 }
