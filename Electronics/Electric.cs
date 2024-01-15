@@ -117,6 +117,8 @@ namespace Electric
             if (p.LatestTimestamp > Power.LatestTimestamp || p.Resistance < Power.Resistance) {
 
                 // TODO: Check for faults, etc!
+                // TODO: Make sure Power.source == p.source
+
 
                 Power = new Power(p);
 

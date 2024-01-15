@@ -1,0 +1,11 @@
+[gd_scene load_steps=2 format=3 uid="uid://ckou8dwgsly3k"]
+
+[ext_resource type="Script" path="res://2dElectricDemo/UI/Draggable.cs" id="1_0h0xr"]
+
+[node name="Wire" type="Button"]
+offset_right = 8.0
+offset_bottom = 8.0
+action_mode = 0
+keep_pressed_outside = true
+text = "wire"
+script = ExtResource("1_0h0xr")
